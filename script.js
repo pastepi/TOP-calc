@@ -33,7 +33,6 @@ let displayValue = calcDisplay.textContent;
 let firstOperand;
 let secondOperand;
 let operandFlag = true;
-let newNumber = true;
 let currentOperator;
 
 // Event handlers
@@ -53,17 +52,14 @@ const handleButtonClick = (e) => {
     } else if (clickInput.match(/[\+\-÷\x]/gi)) { 
         inputOperator(clickInput);
     }
-    console.log(firstOperand);
-    console.log(currentOperator);
-    console.log(secondOperand);
+
     handleDisplay();
 }
 
 const inputNumber = (digit) => {
-    if (currentOperator) { displayValue = '0'; operandFlag = false; }
-    if (displayValue === '0' || (displayValue !== '0' && newNumber)) {
+    if (currentOperator) { operandFlag = false; }
+    if (displayValue === '0') {
         displayValue = digit;
-        newNumber = false;
     } else {
         displayValue = displayValue + digit;
     }
@@ -72,13 +68,11 @@ const inputNumber = (digit) => {
 const inputBackspace = () => {
     if (displayValue.slice(-1) === ".") { commaKey.disabled = false };
     displayValue = displayValue.slice(0, displayValue.length - 1);
-    if (!displayValue) { displayValue = '0' }
+    if (displayValue === '') { displayValue = '0' }
 }
 
 const inputClear = () => {
     displayValue = '0';
-    firstOperand = '0';
-    secondOperand = '0';
     commaKey.disabled = false;
 }
 
@@ -89,18 +83,6 @@ const inputComma = () => {
 
 const inputOperator = (operator) => {
     currentOperator = operator;
-    if (secondOperand) {
-        inputEquals();
-    }
-}
-
-const inputEquals = () => {
-    displayValue = operate(currentOperator, Number(firstOperand), Number(secondOperand));
-    firstOperand = displayValue;
-    secondOperand = null;
-    operandFlag = true;
-    currentOperator = null;
-    newNumber = true;
 }
 
 const handleDisplay = () => {
@@ -112,6 +94,12 @@ const handleDisplay = () => {
 
     calcDisplay.textContent = displayValue;
 }
+
+const inputEquals = () => {
+    firstOperand = operate(currentOperator, firstOperand, secondOperand);
+    
+}
+
 // Event listeners
 
 buttons.forEach((button) => {
