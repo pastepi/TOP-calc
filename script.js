@@ -208,7 +208,7 @@ window.addEventListener('keydown', function(e) {
     
     if (aKey === "=") {
         aKey = "Enter";
-    } else if (aKey === "c") {
+    } else if (aKey === "c" || aKey === "Escape") {
         aKey = "C";
     } else if (aKey === "x" || aKey === "X") {
         aKey = "*";
