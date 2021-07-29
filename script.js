@@ -3,12 +3,7 @@
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
-const divide = (a, b) => {
-    if (b === 0) {
-        return "You can't divide by 0!"
-    }
-    return a / b;
-}
+const divide = (a, b) => b === 0 ? "error" : a / b;
 
 const operate = (operator, a, b) => {
     switch(operator) {
@@ -30,74 +25,174 @@ const buttons = document.querySelectorAll('button');
 const commaKey = document.getElementById('comma-key');
 
 let displayValue = calcDisplay.textContent;
-let firstOperand;
-let secondOperand;
+let currentValue = displayValue;
+let firstOperand = '0';
+let secondOperand = '0';
 let operandFlag = true;
 let currentOperator;
 
+let operatorForEquals;
+let secondOperandForEquals;
+let secondOperandFlag = true;
+
+let lastAction;
+
 // Event handlers
 
-const handleButtonClick = (e) => {
+const handleButtonClick = function (e) {
+    handleInputs(e.target.textContent);
+}
 
-    let clickInput = e.target.textContent;
+const handleInputs = function (btnInput) {
+    
+    let clickInput = btnInput;
 
     if (clickInput.match(/[0-9]/g)) {
+        if (lastAction === 'inputEquals') {
+            inputClear();
+        }
         inputNumber(clickInput);
+        lastAction = 'inputNumber';
     } else if (clickInput === 'backspace') {
         inputBackspace();
+        lastAction = 'inputBackspace';
     } else if (clickInput === 'C') {
         inputClear();
+        lastAction = 'inputClear';
     } else if (clickInput === '.' && (!displayValue.match(/\./g))) {
+        if (lastAction === 'inputEquals') {
+            inputClear();
+        }
         inputComma();
-    } else if (clickInput.match(/[\+\-÷\x]/gi)) { 
-        inputOperator(clickInput);
+        lastAction = 'inputComma';
+    } else if (clickInput.match(/[\+\-÷\x]/gi)) {
+        if (lastAction === 'inputOperator') {
+            currentOperator = clickInput;
+        } else {
+            inputOperator(clickInput);
+        }
+        
+        lastAction = 'inputOperator';
+    } else if (clickInput === '=') {
+        secondOperand = currentValue;
+        if (lastAction === 'inputEquals') {
+            secondOperand = secondOperandForEquals;
+            currentOperator = operatorForEquals;
+        }
+        inputEquals();
+        lastAction = 'inputEquals';
     }
 
     handleDisplay();
 }
 
 const inputNumber = (digit) => {
-    if (currentOperator) { operandFlag = false; }
-    if (displayValue === '0') {
-        displayValue = digit;
+
+    if (currentValue === '0') {
+        currentValue = digit;
     } else {
-        displayValue = displayValue + digit;
+        currentValue = currentValue + digit;
     }
+    
+    if (!operandFlag) {
+        secondOperandFlag = true;
+    }
+    displayValue = currentValue;
 }
 
 const inputBackspace = () => {
-    if (displayValue.slice(-1) === ".") { commaKey.disabled = false };
-    displayValue = displayValue.slice(0, displayValue.length - 1);
-    if (displayValue === '') { displayValue = '0' }
+    if (String(currentValue).slice(-1) === ".") { commaKey.disabled = false };
+    currentValue = String(currentValue).slice(0, String(currentValue).length - 1);
+    if (currentValue === '') { currentValue = '0' }
+
+    displayValue = currentValue;
 }
 
 const inputClear = () => {
     displayValue = '0';
+    currentValue = '0';
+    firstOperand = '0';
+    secondOperand = '0';
+    currentOperator = null;
+    operatorForEquals = null;
+    operandFlag = true;
+    secondOperandForEquals = null;
+    secondOperandFlag = false;
     commaKey.disabled = false;
+    buttons.forEach((button) => {
+        button.disabled = false;
+    })
 }
 
 const inputComma = () => {
-    displayValue = displayValue + '.';
+    currentValue = currentValue + '.';
     commaKey.disabled = true;
+
+    displayValue = currentValue;
 }
 
 const inputOperator = (operator) => {
-    currentOperator = operator;
-}
-
-const handleDisplay = () => {
+    
     if (operandFlag) {
         firstOperand = displayValue;
-    } else {
+        currentOperator = operator;
+    } else if (!operandFlag) {
+        secondOperandFlag = true;
         secondOperand = displayValue;
     }
 
-    calcDisplay.textContent = displayValue;
+    if (!operandFlag && secondOperandFlag) {
+        if (currentOperator) {
+            currentValue = operate(currentOperator, Number(firstOperand), Number(secondOperand));
+            currentOperator = operator;            
+        } else {
+            currentOperator = operator;
+            currentValue = operate(currentOperator, Number(firstOperand), Number(secondOperand));            
+        }
+        
+        displayValue = currentValue;
+        firstOperand = currentValue;
+        currentValue = '0';
+    } else {
+        currentValue = secondOperand;
+        operandFlag = false;
+    
+        displayValue = firstOperand;
+    }
 }
 
 const inputEquals = () => {
-    firstOperand = operate(currentOperator, firstOperand, secondOperand);
+    if (!currentOperator && !operatorForEquals) {
+        buttons.forEach((button) => {
+            button.disabled = true;
+        })
+        buttons[0].disabled = false;
+        displayValue = 'error';
+    } else if (operate(currentOperator, Number(firstOperand), Number(secondOperand)) === "error") {
+        buttons.forEach((button) => {
+            button.disabled = true;
+        })
+        buttons[0].disabled = false;
+        displayValue = "NaN";
+    } else {
+        
+        currentValue = operate(currentOperator, Number(firstOperand), Number(secondOperand));
+
+        secondOperandForEquals = secondOperand;
+        secondOperand = '0';
+        operandFlag = true;
+        firstOperand = currentValue;
+        operatorForEquals = currentOperator;
+        currentOperator = null;
+
+        displayValue = currentValue;
+    }
+}
+
+const handleDisplay = () => {
     
+    displayValue = String(displayValue);
+    calcDisplay.textContent = displayValue;
 }
 
 // Event listeners
@@ -107,51 +202,27 @@ buttons.forEach((button) => {
 })
 
 
+window.addEventListener('keydown', function(e) {
+    
+    let aKey = e.key;
+    
+    if (aKey === "=") {
+        aKey = "Enter";
+    } else if (aKey === "c") {
+        aKey = "C";
+    } else if (aKey === "x" || aKey === "X") {
+        aKey = "*";
+    } else if (aKey === ",") {
+        aKey = ".";
+    } else if (aKey === "Delete") {
+        aKey = "Backspace";
+    }
+    
+    const buttonKey = document.querySelector(`button[key="${aKey}"]`);
+    if (!buttonKey) {
+        return;
+    }
+    
+    handleInputs(buttonKey.textContent);
+})
 
-  // let currentDisplay = calcDisplay.textContent;
-    // let clickInput = e.target.textContent;
-
-    // if (calcNumber.length > 0 && !firstNum) { // Only change the display to 2nd number
-    //     firstNum = currentDisplay             // after user starts inputting it
-    //     currentDisplay = '';
-    // }
-
-    // if (clickInput.match(/[0-9]/g)) {
-        
-    //     if (currentDisplay === "0") {
-    //         currentDisplay = clickInput;
-    //     } else {
-    //         currentDisplay = currentDisplay.concat(clickInput);
-    //     }
-    // } else if (clickInput === 'backspace') {
-    //     if (currentDisplay.slice(-1) === ".") { commaKey.disabled = false };
-    //     currentDisplay = currentDisplay.slice(0, currentDisplay.length - 1);
-    // } else if (clickInput === 'C') {
-    //     currentDisplay = "0";
-    //     commaKey.disabled = false;
-    // } else if (clickInput === '.' && (!currentDisplay.match(/\./g))) {
-    //     currentDisplay = currentDisplay.concat(clickInput);
-    //     commaKey.disabled = true;
-    // } else if (clickInput.match(/[\+\-÷\x]/gi)) {
-    //     if (calcOperator !== clickInput && calcNumber[0]) {
-    //         calcOperator = clickInput;
-    //         return;
-    //     }
-
-    //     calcNumber.push(currentDisplay);
-    //     if (calcNumber.length > 1) {
-    //         calcNumber[0] = calcNumber.reduce((a, b) => operate(calcOperator, Number(a), Number(b)));
-    //         currentDisplay = calcNumber[0];
-    //         calcNumber.pop();
-    //         firstNum = null;
-    //     } 
-        
-    //     console.log(calcNumber);
-    //     console.log(calcOperator);
-    // }
-
-    // if (currentDisplay !== "") {
-    //     calcDisplay.textContent = currentDisplay;
-    // } else {
-    //     calcDisplay.textContent = "0";
-    // }

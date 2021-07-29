@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+
 * {
     box-sizing: border-box;
     font-family: monospace;
@@ -9,23 +12,30 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(126, 116, 109);
+    background-color: beige;
 }
 
 .calc-body {
     display: flex;
     flex-direction: column;
     background-color: rgb(230, 230, 230);
-    width: 30vw;
-    height: 50vh;    
+    width: 25vw;
+    height: 50vh; 
+    border: 25px solid silver;
+    border-radius: 15px;
+    background-color: silver;
+    box-shadow: 0 0 10px 5px black;
 }
 
 .calc-display {
     height: 20%;
-    background: white;
-    padding: 2rem;
-    border: 2px solid black;
-    border-radius: 0%;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    background: rgb(73, 73, 73);
+    color: rgb(224, 224, 204);
+    padding: 1rem;
+    border: 5px inset black;
+    border-radius: 7px;
     text-align: right;
     overflow: hidden;
 }
@@ -36,7 +46,8 @@ body {
     text-align: center;
     grid-template-columns: repeat(4, minmax(20px, 1fr));
     overflow: hidden;
-    
+    background-color: rgb(179, 179, 179);
+    border-radius: 1%;
 }
 
 .calc-buttons-container button {
@@ -44,11 +55,24 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0%;
+    font-weight: 600;
+    border-radius: 5px;
+    background-color: rgb(156, 156, 156);
+    margin: 2px;
+}
+
+.calc-buttons-container button:hover {
+    background-color: rgb(88, 88, 88);
+}
+
+.calc-buttons-container button:active {
+    background-color: rgb(56, 56, 56);
 }
 
 .calc-buttons-container button:nth-child(1) {
     grid-column: 1 / 3;
+    color: rgb(202, 43, 3);
+    text-shadow: black 1px 1px;
 }
 
 .calc-buttons-container button:nth-child(15) {
@@ -56,3 +80,43 @@ body {
     grid-column: 4 / 5;
 }
 
+/* Button colors (+active/hover)*/
+
+.calc-buttons-container button:nth-child(18) {
+    background-color: rgb(250, 219, 41);
+    border-color: rgb(165, 144, 25);
+}
+
+.calc-buttons-container button:nth-child(18):hover {
+    background-color: rgb(175, 153, 25);
+}
+
+.calc-buttons-container button:nth-child(18):active {
+    background-color: rgb(112, 98, 17);
+}
+
+.calc-buttons-container button:nth-child(-4n+15) {
+    background-color: rgb(89, 75, 170);
+    border-color: rgb(60, 50, 117);
+}
+
+.calc-buttons-container button:nth-child(-4n+15):hover {
+    background-color: rgb(67, 56, 128);
+}
+
+.calc-buttons-container button:nth-child(-4n+15):active {
+    background-color: rgb(48, 40, 92);
+}
+
+.calc-buttons-container button:nth-child(-n+2) {
+    border-color: rgb(110, 170, 109);
+    background-color: rgb(145, 224, 143);
+}
+
+.calc-buttons-container button:nth-child(-n+2):hover {
+    background-color: rgb(110, 170, 109);
+}
+
+.calc-buttons-container button:nth-child(-n+2):active {
+    background-color: rgb(90, 143, 90);
+}
