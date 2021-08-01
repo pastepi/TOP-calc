@@ -163,12 +163,14 @@ const inputOperator = (operator) => {
 
 const inputEquals = () => {
     if (!currentOperator && !operatorForEquals) {
+        inputClear();
         buttons.forEach((button) => {
             button.disabled = true;
         })
         buttons[0].disabled = false;
         displayValue = 'error';
     } else if (operate(currentOperator, Number(firstOperand), Number(secondOperand)) === "error") {
+        inputClear();
         buttons.forEach((button) => {
             button.disabled = true;
         })
@@ -198,9 +200,10 @@ const handleDisplay = () => {
 // Event listeners
 
 buttons.forEach((button) => {
-    button.addEventListener('click', handleButtonClick)
+    button.addEventListener('click', handleButtonClick);
 })
 
+// Keyboard support
 
 window.addEventListener('keydown', function(e) {
     
@@ -221,8 +224,31 @@ window.addEventListener('keydown', function(e) {
     const buttonKey = document.querySelector(`button[key="${aKey}"]`);
     if (!buttonKey) {
         return;
+    } else {
+        buttonKey.classList.add('active');
     }
-    
     handleInputs(buttonKey.textContent);
+})
+
+window.addEventListener('keyup', function(e) {
+    let aKey = e.key;
+    
+    if (aKey === "=") {
+        aKey = "Enter";
+    } else if (aKey === "c" || aKey === "Escape") {
+        aKey = "C";
+    } else if (aKey === "x" || aKey === "X") {
+        aKey = "*";
+    } else if (aKey === ",") {
+        aKey = ".";
+    } else if (aKey === "Delete") {
+        aKey = "Backspace";
+    }
+    const buttonKey = document.querySelector(`button[key="${aKey}"]`);
+    if (!buttonKey) {
+        return;
+    } else {
+        buttonKey.classList.remove('active');
+    }
 })
 

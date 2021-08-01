@@ -7,13 +7,13 @@
 }
 
 body {
-    font-size: 2.5rem;
+    font-size: calc(1rem + 2vh);
     height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(91,118,255);
-    background: linear-gradient(270deg, #4f67df, #74b972);
+    background: rgb(94, 116, 226);
+    background: linear-gradient(270deg, #5f73db, #74b972);
     background-size: 400% 400%;
     animation: gradient 13s ease infinite;
 }
@@ -30,19 +30,22 @@ body {
     background-color: rgb(230, 230, 230);
     width: 25vw;
     height: 50vh; 
-    border: 25px solid rgb(148, 148, 148);
-    border-radius: 4px;
+    border: calc(1rem + 1vh) solid rgb(148, 148, 148);
+    border-radius: 2px;
     background-color: rgb(148, 148, 148);
     box-shadow: 0 0 10px 5px black;
 }
 
 .calc-display {
+    display: flex;
     height: 20%;
     font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
+    font-size: calc(1rem + 3vh);
     background: rgb(73, 73, 73);
     color: rgb(224, 224, 204);
-    padding: 1rem;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 1vh;
     border: 5px inset rgb(141, 141, 141);
     border-radius: 7px;
     text-align: right;
@@ -70,11 +73,13 @@ body {
     margin: 2px;
 }
 
-.calc-buttons-container button:hover {
+.calc-buttons-container button:hover,
+.calc-buttons-container button.hover {
     background-color: rgb(88, 88, 88);
 }
 
-.calc-buttons-container button:active {
+.calc-buttons-container button:active,
+.calc-buttons-container button.active {
     background-color: rgb(56, 56, 56);
 }
 
@@ -96,11 +101,13 @@ body {
     border-color: rgb(165, 144, 25);
 }
 
-.calc-buttons-container button:nth-child(18):hover {
+.calc-buttons-container button:nth-child(18):hover,
+.calc-buttons-container button:nth-child(18).hover {
     background-color: rgb(175, 153, 25);
 }
 
-.calc-buttons-container button:nth-child(18):active {
+.calc-buttons-container button:nth-child(18):active,
+.calc-buttons-container button:nth-child(18).active {
     background-color: rgb(112, 98, 17);
 }
 
@@ -109,11 +116,13 @@ body {
     border-color: rgb(60, 50, 117);
 }
 
-.calc-buttons-container button:nth-child(-4n+15):hover {
+.calc-buttons-container button:nth-child(-4n+15):hover,
+.calc-buttons-container button:nth-child(-4n+15).hover {
     background-color: rgb(67, 56, 128);
 }
 
-.calc-buttons-container button:nth-child(-4n+15):active {
+.calc-buttons-container button:nth-child(-4n+15):active,
+.calc-buttons-container button:nth-child(-4n+15).active {
     background-color: rgb(48, 40, 92);
 }
 
@@ -122,10 +131,12 @@ body {
     background-color: rgb(145, 224, 143);
 }
 
-.calc-buttons-container button:nth-child(-n+2):hover {
+.calc-buttons-container button:nth-child(-n+2):hover,
+.calc-buttons-container button:nth-child(-n+2).hover {
     background-color: rgb(110, 170, 109);
 }
 
-.calc-buttons-container button:nth-child(-n+2):active {
+.calc-buttons-container button:nth-child(-n+2):active,
+.calc-buttons-container button:nth-child(-n+2).active {
     background-color: rgb(90, 143, 90);
 }
